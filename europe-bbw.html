@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Free live European BBW cams on Chaturbate • Curvy girls from Europe streaming now • HD">
+  <meta name="description" content="Free live European BBW cams on Chaturbate • Curvy European girls streaming now • HD">
   <title>LIVE European BBW Cams • Free Chaturbate Embeds</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>body { background: #111; color: #fff; } .card { transition: all 0.3s; } .card:hover { transform: scale(1.05); }</style>
 </head>
 <body class="min-h-screen p-4">
   <div class="max-w-7xl mx-auto">
-    <div class="flex flex-wrap justify-center gap-6 mb-6 text-sm font-medium">
+    <!-- NAV -->
+    <div id="nav" class="flex flex-wrap justify-center gap-6 mb-6 text-sm font-medium">
       <a href="index.html" class="text-pink-400 hover:underline">All BBW Cams</a>
-      <a href="milf-bbw.html" class="text-pink-400 hover:underline">MILF BBW</a>
-      <a href="latina-bbw.html" class="text-pink-400 hover:underline">Latina BBW</a>
       <a href="asian-bbw.html" class="text-pink-400 hover:underline">Asian BBW</a>
-      <a href="ebony-bbw.html" class="text-pink-400 hover:underline">Ebony BBW</a>
-      <a href="europe-bbw.html" class="text-pink-400 hover:underline">European BBW</a>
+      <a href="latina-bbw.html" class="text-pink-400 hover:underline">Latina BBW</a>
+      <a href="milf-bbw.html" class="text-pink-400 hover:underline">MILF BBW</a>
+      <a href="europe-bbw.html" class="text-pink-400 hover:underline">Europe BBW</a>
     </div>
 
     <h1 class="text-4xl font-bold text-center mb-2">LIVE EUROPEAN BBW CHATURBATE CAMS</h1>
@@ -25,10 +25,9 @@
     <div id="grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
   </div>
 
-  <!-- Modal same as before -->
   <div id="modal" class="hidden fixed inset-0 bg-black/90 flex items-center justify-center z-50">
     <div class="w-full max-w-4xl p-4 relative">
-      <button onclick="closeModal()" class="absolute top-4 right-4 text-white text-3xl">✕</button>
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-white text-3xl">X</button>
       <div id="iframe-container"></div>
     </div>
   </div>
@@ -47,10 +46,7 @@
 
         rooms = rooms.filter(room => {
           const tags = (room.tags || []).map(t => t.toLowerCase());
-          if (!tags.includes("bbw")) return false;
-          const loc = (room.location || '').toLowerCase();
-          const euroCountries = ["germany","france","uk","united kingdom","spain","italy","russia","netherlands","poland","sweden","norway","denmark","belgium","austria","switzerland","portugal","greece"];
-          return euroCountries.some(c => loc.includes(c));
+          return tags.includes("bbw") && tags.includes("european");
         });
 
         rooms.sort((a,b) => b.num_users - a.num_users);
@@ -58,11 +54,10 @@
         grid.innerHTML = "";
 
         if (rooms.length === 0) {
-          grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">No European BBW cams live right now.<br>Auto-refreshes every 90 seconds</div>`;
+          grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">No European BBW cams live right now.<br>Auto-refreshes every 90 seconds (try again soon)</div>`;
           return;
         }
 
-        // card creation code is identical to the others above
         rooms.forEach(room => {
           const card = document.createElement("div");
           card.className = "card bg-zinc-900 rounded-xl overflow-hidden cursor-pointer";
@@ -101,6 +96,14 @@
       document.getElementById("modal").classList.add("hidden"); 
       document.getElementById("iframe-container").innerHTML = ""; 
     }
+
+    // === ACTIVE NAV HIGHLIGHT ===
+    const currentFile = window.location.pathname.split('/').pop() || 'index.html';
+    document.querySelectorAll('#nav a').forEach(a => {
+      if (a.getAttribute('href') === currentFile) {
+        a.classList.add('font-bold', 'border-b-2', 'border-pink-400', 'pb-1');
+      }
+    });
 
     loadRooms();
     setInterval(loadRooms, 90000);
