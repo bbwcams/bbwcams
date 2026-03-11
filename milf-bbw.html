@@ -10,7 +10,6 @@
 </head>
 <body class="min-h-screen p-4">
   <div class="max-w-7xl mx-auto">
-    <!-- NAV -->
     <div class="flex flex-wrap justify-center gap-6 mb-6 text-sm font-medium">
       <a href="index.html" class="text-pink-400 hover:underline">All BBW Cams</a>
       <a href="milf-bbw.html" class="text-pink-400 hover:underline">MILF BBW</a>
@@ -32,7 +31,7 @@
   </div>
 
   <script>
-    const API = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=T2CSW&client_ip=request_ip";
+    const API = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=T2CSW&client_ip=request_ip&tag=bbw&tag=milf&limit=200";
 
     async function loadRooms() {
       const grid = document.getElementById("grid");
@@ -43,18 +42,12 @@
         const data = await res.json();
         let rooms = data.results || [];
 
-        // CLIENT-SIDE FILTER (same as your working index.html)
-        rooms = rooms.filter(room => {
-          const tags = (room.tags || []).map(t => t.toLowerCase());
-          return tags.includes("bbw") && tags.includes("milf");
-        });
-
         rooms.sort((a,b) => b.num_users - a.num_users);
 
         grid.innerHTML = "";
 
         if (rooms.length === 0) {
-          grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">No MILF BBW cams live right now.<br>Auto-refreshes every 90 seconds (try again soon)</div>`;
+          grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">No MILF BBW cams live right now.<br>Auto-refreshes every 90 seconds</div>`;
           return;
         }
 
