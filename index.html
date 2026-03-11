@@ -10,7 +10,6 @@
 </head>
 <body class="min-h-screen p-4">
   <div class="max-w-7xl mx-auto">
-    <!-- FULL NAV -->
     <div class="flex flex-wrap justify-center gap-6 mb-6 text-sm font-medium">
       <a href="index.html" class="text-pink-400 hover:underline">All BBW Cams</a>
       <a href="milf-bbw.html" class="text-pink-400 hover:underline">MILF BBW</a>
@@ -23,7 +22,6 @@
     <div id="grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
   </div>
 
-  <!-- Modal -->
   <div id="modal" class="hidden fixed inset-0 bg-black/90 flex items-center justify-center z-50">
     <div class="w-full max-w-4xl p-4 relative">
       <button onclick="closeModal()" class="absolute top-4 right-4 text-white text-3xl">✕</button>
@@ -32,7 +30,7 @@
   </div>
 
   <script>
-    const API = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=T2CSW&client_ip=request_ip";
+    const API = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=T2CSW&client_ip=request_ip&tags=bbw";
 
     async function loadRooms() {
       const grid = document.getElementById("grid");
@@ -43,18 +41,12 @@
         const data = await res.json();
         let rooms = data.results || [];
 
-        // BBW FILTER (only curvy girls)
-        rooms = rooms.filter(room => {
-          const tags = (room.tags || []).map(t => t.toLowerCase());
-          return tags.includes("bbw");
-        });
-
         rooms.sort((a,b) => b.num_users - a.num_users);
 
         grid.innerHTML = "";
 
         if (rooms.length === 0) {
-          grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">No BBW cams right now — check back soon</div>`;
+          grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">No BBW cams right now — will auto-refresh in 90 seconds</div>`;
           return;
         }
 
@@ -84,7 +76,6 @@
           grid.appendChild(card);
         });
       } catch(e) {
-        console.error(e);
         grid.innerHTML = `<div class="col-span-full text-center py-12 text-red-400">Could not load cams.<br><button onclick="loadRooms()" class="underline mt-2">Retry</button></div>`;
       }
     }
