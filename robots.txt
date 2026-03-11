@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://bbwcams.github.io/bbwcams/sitemap.xml
