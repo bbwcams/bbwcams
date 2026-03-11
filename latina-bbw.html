@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Free live Latina BBW cams on Chaturbate • Curvy Latina girls streaming now • HD embeds updated every 90 seconds">
+  <title>LIVE Latina BBW Cams • Free Chaturbate Embeds</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>body { background: #111; color: #fff; } .card { transition: all 0.3s; } .card:hover { transform: scale(1.05); }</style>
+</head>
+<body class="min-h-screen p-4">
+  <div class="max-w-7xl mx-auto">
+    <!-- FULL NAV -->
+    <div class="flex flex-wrap justify-center gap-6 mb-6 text-sm font-medium">
+      <a href="index.html" class="text-pink-400 hover:underline">All BBW Cams</a>
+      <a href="asian-bbw.html" class="text-pink-400 hover:underline">Asian BBW</a>
+      <a href="latina-bbw.html" class="text-pink-400 hover:underline">Latina BBW</a>
+      <a href="ebony-bbw.html" class="text-pink-400 hover:underline">Ebony BBW</a>
+      <a href="europe-bbw.html" class="text-pink-400 hover:underline">European BBW</a>
+      <a href="milf-bbw.html" class="text-pink-400 hover:underline">MILF BBW</a>
+    </div>
+
+    <h1 class="text-4xl font-bold text-center mb-2">LIVE LATINA BBW CHATURBATE CAMS</h1>
+    <p class="text-center text-pink-400 mb-8">Curvy Latina girls • HD • Updated every 90 seconds • 18+</p>
+    
+    <div id="grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal" class="hidden fixed inset-0 bg-black/90 flex items-center justify-center z-50">
+    <div class="w-full max-w-4xl p-4 relative">
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-white text-3xl">✕</button>
+      <div id="iframe-container"></div>
+    </div>
+  </div>
+
+  <script>
+    const API = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=T2CSW&client_ip=request_ip";
+
+    async function loadRooms() {
+      try {
+        const res = await fetch(API);
+        const data = await res.json();
+        let rooms = data.results || [];
+
+        // FILTER: BBW + LATINA tags
+        rooms = rooms.filter(room => {
+          const tags = (room.tags || []).map(t => t.toLowerCase());
+          return tags.includes("bbw") && tags.includes("latina");
+        });
+
+        rooms.sort((a,b) => b.num_users - a.num_users);
+
+        const grid = document.getElementById("grid");
+        grid.innerHTML = "";
+
+        rooms.forEach(room => {
+          const card = document.createElement("div");
+          card.className = "card bg-zinc-900 rounded-xl overflow-hidden cursor-pointer";
+          card.innerHTML = `
+            <img src="${room.image_url_360x270}" class="w-full h-48 object-cover">
+            <div class="p-3">
+              <div class="flex justify-between items-start">
+                <div>
+                  <div class="font-bold text-lg">${room.username}</div>
+                  <div class="text-xs text-pink-400 line-clamp-2">${room.room_subject}</div>
+                </div>
+                <div class="text-right">
+                  <div class="text-emerald-400 text-sm">${room.num_users} now</div>
+                  <div class="text-xs text-gray-400">${room.age} • ${room.location || 'Unknown'}</div>
+                </div>
+              </div>
+            </div>
+          `;
+          const btn = document.createElement("button");
+          btn.className = "mt-3 w-full bg-pink-600 hover:bg-pink-500 py-2 rounded-lg font-bold";
+          btn.textContent = "WATCH LIVE FREE";
+          btn.onclick = () => openRoom(room.iframe_embed_revshare);
+          card.querySelector(".p-3").appendChild(btn);
+          grid.appendChild(card);
+        });
+      } catch(e) { console.error(e); }
+    }
+
+    function openRoom(html) { 
+      document.getElementById("iframe-container").innerHTML = html; 
+      document.getElementById("modal").classList.remove("hidden"); 
+    }
+    function closeModal() { 
+      document.getElementById("modal").classList.add("hidden"); 
+      document.getElementById("iframe-container").innerHTML = ""; 
+    }
+
+    loadRooms();
+    setInterval(loadRooms, 90000);
+  </script>
+</body>
+</html>
