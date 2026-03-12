@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Free live Latina BBW cams on Chaturbate • Curvy Latina girls streaming now">
-  <title>LIVE Latina BBW Cams</title>
+  <title>LIVE Latina BBW Cams • Free Chaturbate Embeds</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>body { background: #111; color: #fff; } .card { transition: all 0.3s; } .card:hover { transform: scale(1.05); }</style>
 </head>
@@ -20,20 +20,29 @@
     </div>
 
     <h1 class="text-4xl font-bold text-center mb-2">LIVE LATINA BBW CHATURBATE CAMS</h1>
-    <p class="text-center text-pink-400 mb-8">Curvy BBW Girls • HD • Updated Every 90 Seconds • 18+</p>
+    <p class="text-center text-pink-400 mb-4">Curvy Latina girls • HD • Updated every 90 seconds • 18+</p>
     
+    <!-- HASHTAGS INTERLINK -->
+    <div class="flex flex-wrap justify-center gap-4 text-sm text-pink-400 mb-8">
+      <a href="index.html" class="hover:underline">#BBW</a>
+      <a href="asian-bbw.html" class="hover:underline">#AsianBBW</a>
+      <a href="latina-bbw.html" class="hover:underline">#LatinaBBW</a>
+      <a href="milf-bbw.html" class="hover:underline">#MILFBBW</a>
+      <a href="europe-bbw.html" class="hover:underline">#EuropeBBW</a>
+    </div>
+
     <div id="grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
   </div>
 
   <div id="modal" class="hidden fixed inset-0 bg-black/90 flex items-center justify-center z-50">
     <div class="w-full max-w-4xl p-4 relative">
-      <button onclick="closeModal()" class="absolute top-4 right-4 text-white text-3xl">X</button>
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-white text-3xl">✕</button>
       <div id="iframe-container"></div>
     </div>
   </div>
 
   <script>
-    const API = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=T2CSW&client_ip=request_ip";
+    const API = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=T2CSW&client_ip=request_ip&tags=bbw&region=southamerica";
 
     async function loadRooms() {
       const grid = document.getElementById("grid");
@@ -44,17 +53,12 @@
         const data = await res.json();
         let rooms = data.results || [];
 
-        rooms = rooms.filter(room => {
-          const tags = (room.tags || []).map(t => t.toLowerCase());
-          return tags.includes("bbw") && tags.includes("latina");
-        });
-
         rooms.sort((a,b) => b.num_users - a.num_users);
 
         grid.innerHTML = "";
 
         if (rooms.length === 0) {
-          grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">No Latina BBW cams live right now.<br>Auto-refreshes every 90 seconds (try again soon)</div>`;
+          grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">No Latina BBW cams live right now.<br>Auto-refreshes every 90 seconds</div>`;
           return;
         }
 
@@ -97,7 +101,6 @@
       document.getElementById("iframe-container").innerHTML = ""; 
     }
 
-    // === ACTIVE NAV HIGHLIGHT ===
     const currentFile = window.location.pathname.split('/').pop() || 'index.html';
     document.querySelectorAll('#nav a').forEach(a => {
       if (a.getAttribute('href') === currentFile) {
