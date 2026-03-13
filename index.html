@@ -36,35 +36,39 @@
 
   <div id="modal" class="hidden fixed inset-0 bg-black/90 flex items-center justify-center z-50">
     <div class="w-full max-w-4xl p-4 relative">
-      <button onclick="closeModal()" class="absolute top-4 right-4 text-white text-3xl">X</button>
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-white text-3xl">✕</button>
       <div id="iframe-container"></div>
     </div>
   </div>
 
   <script>
-    const API = "https://chaturbate.com/api/public/affiliates/onlinerooms/?wm=T2CSW&client_ip=request_ip";
-    const FILTER_TAGS = ['bbw'];
+    const BASE_API = "https://chaturbate.com/affiliates/api/onlinerooms/?format=json&wm=T2CSW&limit=200";
+    const PROXY = "https://corsproxy.io/?";
+    const API = PROXY + encodeURIComponent(BASE_API);
+    const FILTER_TAGS = ['bbw'];   // ← change per page
 
     async function loadRooms() {
       const grid = document.getElementById("grid");
-      grid.innerHTML = `<div class="col-span-full text-center py-12 text-pink-400">Loading live BBW cams... ⏳</div>`;
+      grid.innerHTML = `<div class="col-span-full text-center py-12 text-pink-400">Loading live BBW cams via proxy... ⏳</div>`;
 
       try {
         const res = await fetch(API);
+        if (!res.ok) throw new Error("Proxy or API error");
         const data = await res.json();
         let rooms = data.results || [];
 
+        // Client-side tag filter (reliable)
         rooms = rooms.filter(room => {
-          const tags = (room.tags || []).map(t => t.toLowerCase());
+          const tags = (room.tags || []).map(t => t.toLowerCase().trim());
           return FILTER_TAGS.every(t => tags.includes(t));
         });
 
-        rooms.sort((a,b) => b.num_users - a.num_users);
+        rooms.sort((a, b) => b.num_users - a.num_users);
 
         grid.innerHTML = "";
 
         if (rooms.length === 0) {
-          grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">No BBW cams right now — auto-refreshing...</div>`;
+          grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">No matching cams right now — will auto-refresh</div>`;
           return;
         }
 
@@ -81,7 +85,7 @@
                 </div>
                 <div class="text-right">
                   <div class="text-emerald-400 text-sm">${room.num_users} now</div>
-                  <div class="text-xs text-gray-400">${room.age} • ${room.location || 'Unknown'}</div>
+                  <div class="text-xs text-gray-400">${room.age || '?'} • ${room.location || 'Unknown'}</div>
                 </div>
               </div>
             </div>
@@ -94,7 +98,8 @@
           grid.appendChild(card);
         });
       } catch(e) {
-        grid.innerHTML = `<div class="col-span-full text-center py-12 text-red-400">Could not load cams.<br><button onclick="loadRooms()" class="underline mt-2">Retry</button></div>`;
+        grid.innerHTML = `<div class="col-span-full text-center py-12 text-red-400">Proxy temporarily down.<br><button onclick="loadRooms()" class="underline mt-2">Retry</button></div>`;
+        console.error(e);
       }
     }
 
@@ -107,12 +112,10 @@
       document.getElementById("iframe-container").innerHTML = ""; 
     }
 
-    // Active nav
-    const currentFile = window.location.pathname.split('/').pop() || 'index.html';
+    // Active nav highlighting
+    const current = window.location.pathname.split('/').pop() || 'index.html';
     document.querySelectorAll('#nav a').forEach(a => {
-      if (a.getAttribute('href') === currentFile) {
-        a.classList.add('font-bold', 'border-b-2', 'border-pink-400', 'pb-1');
-      }
+      if (a.getAttribute('href') === current) a.classList.add('font-bold', 'border-b-2', 'border-pink-400', 'pb-1');
     });
 
     loadRooms();
