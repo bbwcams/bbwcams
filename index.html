@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Free live BBW Chaturbate cams • Curvy girls streaming now • HD embeds updated every 90 seconds">
-  <title>LIVE BBW Cams • Free Chaturbate Embeds</title>
+  <meta name="description" content="Free live BBW Chaturbate cams • 50–100+ curvy girls streaming now • HD embeds updated every 90 seconds">
+  <title>LIVE BBW Cams • Free Chaturbate Embeds (50+ cams)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>body { background: #111; color: #fff; } .card { transition: all 0.3s; } .card:hover { transform: scale(1.05); }</style>
 </head>
@@ -20,7 +20,7 @@
     </div>
 
     <h1 class="text-4xl font-bold text-center mb-2">LIVE BBW CHATURBATE CAMS</h1>
-    <p class="text-center text-pink-400 mb-4">Curvy girls • HD • Updated every 90 seconds • 18+</p>
+    <p class="text-center text-pink-400 mb-4">50–100+ curvy girls • HD • Updated every 90 seconds • 18+</p>
     
     <!-- HASHTAGS -->
     <div class="flex flex-wrap justify-center gap-4 text-sm text-pink-400 mb-8">
@@ -46,24 +46,35 @@
     const BASE_API = "https://chaturbate.com/affiliates/api/onlinerooms/?format=json&wm=T2CSW";
     const API = PROXY + encodeURIComponent(BASE_API);
     
-    // All BBW = broad filter (catches real curvy BBW even if "bbw" tag is missing in the sample)
+    // Broad filter for All BBW (catches real curvy rooms)
     const FILTER_TAGS = ['bbw', 'curvy', 'chubby', 'plump'];
 
     async function loadRooms() {
       const grid = document.getElementById("grid");
-      grid.innerHTML = `<div class="col-span-full text-center py-12 text-pink-400">Loading live BBW cams... ⏳ (Chaturbate samples ~100 rooms)</div>`;
+      grid.innerHTML = `<div class="col-span-full text-center py-12 text-pink-400">Fetching 3 samples for 50–100+ BBW cams... ⏳</div>`;
 
       try {
-        const res = await fetch(API);
-        if (!res.ok) throw new Error("Proxy error");
-        const data = await res.json();
-        let rooms = data.results || [];
+        // 3 parallel calls → 250–300 unique rooms
+        const promises = Array.from({ length: 3 }, () => fetch(API).then(r => r.json()));
+        const allData = await Promise.all(promises);
 
-        // Broad filter for All BBW + only females
+        let rooms = [];
+        const seen = new Set();
+
+        allData.forEach(data => {
+          (data.results || []).forEach(room => {
+            if (!seen.has(room.username)) {
+              seen.add(room.username);
+              rooms.push(room);
+            }
+          });
+        });
+
+        // Filter + only females
         rooms = rooms.filter(room => {
           const tags = (room.tags || []).map(t => t.toLowerCase().trim());
-          const hasBBWTag = FILTER_TAGS.some(t => tags.includes(t));
-          return hasBBWTag && room.gender === "f";
+          const hasMatch = FILTER_TAGS.some(t => tags.includes(t));
+          return hasMatch && room.gender === "f";
         });
 
         rooms.sort((a, b) => b.num_users - a.num_users);
@@ -71,7 +82,7 @@
         grid.innerHTML = "";
 
         if (rooms.length === 0) {
-          grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">No BBW in this sample — auto-refreshing soon</div>`;
+          grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">No BBW in this batch — auto-refreshing</div>`;
           return;
         }
 
